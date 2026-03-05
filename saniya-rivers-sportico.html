@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saniya Rivers — #22 — Happy Birthday</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  /* Force font load verification */
+  @font-face {
+    font-family: 'Barlow Condensed';
+    font-display: swap;
+  }
+  :root {
+    --cream:     #F6F3EE;
+    --paper:     #FDFBF8;
+    --ink:       #111111;
+    --ink-mid:   #444444;
+    --ink-light: #888888;
+    --ink-faint: #CCCCCC;
+    --rule:      #E2E0DC;
+    --orange:    #FF6B1A;
+    --purple:    #8B3FD9;
+    --red:       #C41A00;
+    --silver:    #777788;
+    --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    width:100%;
+    background:var(--cream);
+    font-family:'Barlow', sans-serif;
+    color:var(--ink);
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  @media (min-width:768px) {
+    body { padding: 24px; }
+  }
+
+  /* CONFETTI */
+  #c-canvas {
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:999;
+  }
+
+  /* POSTER — naturally sized, max width, centered */
+  #poster {
+    width:100%;
+    max-width:1100px;
+    display:flex;
+    flex-direction:column;
+    background:var(--paper);
+    box-shadow: 0 2px 24px rgba(0,0,0,0.10);
+  }
+
+  /* ── MASTHEAD ── */
+  #masthead {
+    flex-shrink:0;
+    background:var(--paper);
+    padding:0 16px;
+    opacity:0;
+    animation:fadeDown 0.45s 0.05s forwards;
+  }
+
+  @media (min-width:768px) {
+    #masthead { padding:0 20px; }
+  }
+
+  .masthead-top-rule { display:none; }
+
+  .masthead-body {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 0 9px;
+    gap:16px;
+  }
+
+  .masthead-left {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    gap:2px;
+  }
+
+  .masthead-eyebrow {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:8px;
+    font-weight:600;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--orange);
+    white-space:nowrap;
+  }
+
+  .masthead-name {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:900;
+    font-size:clamp(28px, 4vw, 58px);
+    line-height:1;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  .masthead-center {
+    flex-shrink:0;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* Bio sits tight, vertically centered next to name */
+  .masthead-bio {
+    font-family:'Barlow', sans-serif;
+    font-size:clamp(8px, 1vw, 11px);
+    font-style:italic;
+    color:var(--ink-mid);
+    white-space:nowrap;
+    line-height:1.3;
+  }
+
+  .masthead-right {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
+    gap:3px;
+  }
+
+  .masthead-tags {
+    display:flex;
+    gap:5px;
+  }
+
+  .mtag {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:7.5px;
+    font-weight:700;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border:1.5px solid;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:background 0.15s, color 0.15s;
+  }
+
+  .mtag-sun   { border-color:var(--orange); color:var(--orange); }
+  .mtag-unriv { border-color:var(--purple); color:var(--purple); }
+
+  .mtag-sun.flash   { background:var(--orange); color:#fff; }
+  .mtag-unriv.flash { background:var(--purple); color:#fff; }
+
+  .masthead-bottom-rule {
+    height:1px;
+    background:var(--ink);
+  }
+
+  /* ── PANELS ── */
+  #panels {
+    display:grid;
+    gap:10px;
+    padding:10px 16px 10px;
+    grid-template-columns:repeat(2, 1fr);
+    align-items:start;
+  }
+
+  @media (min-width:768px) {
+    #panels {
+      grid-template-columns:repeat(4, 1fr);
+      padding:12px 20px 12px;
+      gap:12px;
+      align-items:start;
+    }
+  }
+
+  .panel {
+    background:var(--paper);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    padding:14px 14px 12px;
+    border-top:3px solid var(--ink-faint);
+    opacity:0;
+    transform:translateY(10px);
+    animation:panelIn 0.5s forwards;
+    transition:box-shadow 0.25s, transform 0.2s, border-color 0.2s;
+    cursor:pointer;
+  }
+
+  .panel:hover {
+    transform:translateY(-2px);
+  }
+
+  .panel[data-era="hs"]:hover     { box-shadow:0 4px 20px rgba(119,119,136,0.2); border-top-color:var(--silver); }
+  .panel[data-era="college"]:hover { box-shadow:0 4px 20px rgba(196,26,0,0.18); border-top-color:var(--red); }
+  .panel[data-era="sun"]:hover    { box-shadow:0 4px 20px rgba(255,107,26,0.22); border-top-color:var(--orange); }
+  .panel[data-era="unrivaled"]:hover { box-shadow:0 4px 20px rgba(139,63,217,0.22); border-top-color:var(--purple); }
+
+  /* Expand drawer */
+  .panel-expand {
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+    opacity:0;
+  }
+
+  .panel.open .panel-expand {
+    max-height:200px;
+    opacity:1;
+  }
+
+  .expand-inner {
+    border-top:1px solid var(--rule);
+    padding-top:8px;
+    margin-top:8px;
+  }
+
+  .expand-story {
+    font-family:'Barlow', sans-serif;
+    font-size:10px;
+    font-style:italic;
+    color:var(--ink-mid);
+    line-height:1.55;
+    margin-bottom:8px;
+  }
+
+  .expand-stats {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:4px;
+    align-items:stretch;
+  }
+
+  .ex-stat {
+    background:var(--cream);
+    padding:4px 8px 3px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    flex:1;
+    min-width:0;
+  }
+
+  .ex-val {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    line-height:1;
+    white-space:nowrap;
+  }
+
+  .ex-lbl {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:7px;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-light);
+    margin-top:2px;
+    white-space:nowrap;
+  }
+
+  /* Chevron hint */
+  .panel-chevron {
+    font-size:9px;
+    color:var(--ink-faint);
+    margin-left:auto;
+    transition:transform 0.3s;
+    align-self:center;
+  }
+
+  .panel.open .panel-chevron { transform:rotate(180deg); }
+
+  .panel:nth-child(1){ animation-delay:0.15s; border-top-color:var(--silver); }
+  .panel:nth-child(2){ animation-delay:0.25s; border-top-color:var(--red); }
+  .panel:nth-child(3){ animation-delay:0.35s; border-top-color:var(--orange); }
+  .panel:nth-child(4){ animation-delay:0.45s; border-top-color:var(--purple); }
+
+  @keyframes panelIn { to{ opacity:1; transform:translateY(0); } }
+
+  /* Era label row */
+  .panel-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:9px;
+  }
+
+  .panel-era {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:8px;
+    letter-spacing:0.26em;
+    text-transform:uppercase;
+  }
+
+  .panel-years {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:8px;
+    font-weight:700;
+    color:var(--ink-light);
+    letter-spacing:0.26em;
+    margin-left:6px;
+  }
+
+  /* Title + org — aligned left, no indentation */
+  .panel-title {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:800;
+    font-size:clamp(13px, 1.5vw, 18px);
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    line-height:1.05;
+    margin-bottom:1px;
+    color:var(--ink);
+  }
+
+  .panel-org {
+    font-family:'Barlow', sans-serif;
+    font-size:10px;
+    color:var(--ink-light);
+    font-style:italic;
+    margin-bottom:8px;
+  }
+
+  /* Hero stat — 1 line */
+  .hero-val {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    font-size:clamp(36px, 4.5vw, 64px);
+    line-height:0.9;
+    letter-spacing:-0.02em;
+    white-space:nowrap;
+  }
+
+  .hero-lbl {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:8px;
+    font-weight:600;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--ink-light);
+    margin-top:4px;
+    margin-bottom:8px;
+    white-space:nowrap;
+  }
+
+  /* Rule */
+  .panel-rule {
+    height:1px;
+    background:var(--rule);
+    margin-bottom:8px;
+    flex-shrink:0;
+  }
+
+  /* Supporting stats — all on 1 line */
+  .support-stats {
+    display:flex;
+    flex-wrap:nowrap;
+    gap:4px;
+    align-items:flex-start;
+  }
+
+  .s-stat {
+    display:flex;
+    flex-direction:column;
+    background:var(--cream);
+    padding:4px 6px 3px;
+    flex:1;
+    min-width:0;
+  }
+
+  .s-val {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:800;
+    font-size:clamp(13px, 1.5vw, 18px);
+    line-height:1;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  .s-lbl {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:6.5px;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-light);
+    margin-top:2px;
+    white-space:nowrap;
+  }
+
+  /* Panel footnote — strict 1 line */
+  .panel-note {
+    font-family:'Barlow', sans-serif;
+    font-size:8px;
+    font-style:italic;
+    color:var(--ink-light);
+    margin-top:10px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    border-top:1px solid var(--rule);
+    padding-top:7px;
+    flex-shrink:0;
+  }
+
+  /* Live dot */
+  .live-dot {
+    display:inline-block;
+    width:5px; height:5px;
+    margin-right:4px;
+    vertical-align:middle;
+    animation:blink 1.8s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%,100%{ opacity:1; }
+    50%{ opacity:0.15; }
+  }
+
+  /* ── FOOTER ── */
+  #footer {
+    flex-shrink:0;
+    padding:8px 16px 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--paper);
+    border-top:1px solid var(--rule);
+    gap:10px;
+    opacity:0;
+    animation:fadeDown 0.45s 0.65s forwards;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+
+  @media (min-width:768px) {
+    #footer { padding:8px 20px 10px; }
+  }
+
+  .f-left {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--ink-mid);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    flex-shrink:1;
+    min-width:0;
+  }
+
+  .f-left strong { color:var(--orange); font-weight:600; }
+
+  #btn-celebrate {
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:9px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    padding:8px 18px;
+    background:transparent;
+    border:1.5px solid var(--orange);
+    color:var(--orange);
+    cursor:pointer;
+    transition:all 0.2s;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+
+  #btn-celebrate:hover {
+    background:var(--orange);
+    color:#fff;
+    box-shadow:0 0 20px rgba(255,107,26,0.2);
+  }
+
+  .f-right {
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-mid);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    text-align:right;
+    flex-shrink:1;
+    min-width:0;
+  }
+
+  /* Hide right footer text on small screens to keep 1 line */
+  @media (max-width:500px) {
+    .f-right { display:none; }
+  }
+
+  @keyframes fadeDown {
+    from{ opacity:0; transform:translateY(-5px); }
+    to  { opacity:1; transform:translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c-canvas"></canvas>
+
+<div id="poster">
+
+  <!-- MASTHEAD -->
+  <div id="masthead">
+    <div class="masthead-body">
+      <div class="masthead-left">
+        <div class="masthead-eyebrow">Happy Birthday · March 4, 2003</div>
+      </div>
+      <div class="masthead-center">
+        <div class="masthead-name">Saniya Rivers</div>
+        <div class="masthead-bio" style="text-align:center; margin-top:3px;">Guard · Connecticut Sun · Unrivaled Vinyl · Turning 23 Today</div>
+      </div>
+      <div class="masthead-right">
+        <div class="masthead-tags">
+          <span class="mtag mtag-sun" onclick="celebrateTag(this)" title="Celebrate">CT Sun</span>
+          <span class="mtag mtag-unriv" onclick="celebrateTag(this)" title="Celebrate">Unrivaled</span>
+        </div>
+      </div>
+    </div>
+    <div class="masthead-bottom-rule"></div>
+  </div>
+
+  <!-- PANELS -->
+  <div id="panels">
+
+    <!-- 01 HIGH SCHOOL -->
+    <div class="panel" data-era="hs" onclick="togglePanel(this)">
+      <div class="panel-header">
+        <span class="panel-era" style="color:var(--silver)">01 · High School</span>
+        <span class="panel-years">2018–2021</span>
+        <span class="panel-chevron">▾</span>
+      </div>
+      <div class="panel-title">Ashley High School</div>
+      <div class="panel-org">Wilmington, North Carolina</div>
+      <div class="hero-val" style="color:var(--silver)">Top 30</div>
+      <div class="hero-lbl">National Recruit Ranking</div>
+      <div class="panel-rule"></div>
+      <div class="support-stats">
+        <div class="s-stat"><div class="s-val">4★</div><div class="s-lbl">Rating</div></div>
+        <div class="s-stat"><div class="s-val">#22</div><div class="s-lbl">Jersey</div></div>
+        <div class="s-stat"><div class="s-val">Guard</div><div class="s-lbl">Position</div></div>
+        <div class="s-stat"><div class="s-val">NC</div><div class="s-lbl">State</div></div>
+      </div>
+      <div class="panel-expand">
+        <div class="expand-inner">
+          <div class="expand-story">A Top 30 national recruit out of Wilmington. The two-way instincts were there from day one.</div>
+          <div class="expand-stats">
+            <div class="ex-stat"><div class="ex-val" style="color:var(--silver)">4★</div><div class="ex-lbl">Recruit</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--silver)">Top 30</div><div class="ex-lbl">Nationally</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--silver)">SC</div><div class="ex-lbl">Committed</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-note">Where it all began. Wilmington, NC.</div>
+    </div>
+
+    <!-- 02 COLLEGE -->
+    <div class="panel" data-era="college" onclick="togglePanel(this)">
+      <div class="panel-header">
+        <span class="panel-era" style="color:var(--red)">02 · College</span>
+        <span class="panel-years">2021–2024</span>
+        <span class="panel-chevron">▾</span>
+      </div>
+      <div class="panel-title">S. Carolina → NC State</div>
+      <div class="panel-org">SEC → ACC</div>
+      <div class="hero-val" style="color:var(--red)">14.4</div>
+      <div class="hero-lbl">PPG · NC State Senior Season</div>
+      <div class="panel-rule"></div>
+      <div class="support-stats">
+        <div class="s-stat"><div class="s-val">4.5</div><div class="s-lbl">APG</div></div>
+        <div class="s-stat"><div class="s-val">2.2</div><div class="s-lbl">SPG</div></div>
+        <div class="s-stat"><div class="s-val">2×</div><div class="s-lbl">All-ACC</div></div>
+        <div class="s-stat"><div class="s-val">ACC</div><div class="s-lbl">Champ</div></div>
+      </div>
+      <div class="panel-expand">
+        <div class="expand-inner">
+          <div class="expand-story">One year under Dawn Staley at South Carolina, then home to NC State. Two-way dominance in the ACC.</div>
+          <div class="expand-stats">
+            <div class="ex-stat"><div class="ex-val" style="color:var(--red)">5.7</div><div class="ex-lbl">RPG</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--red)">1.3</div><div class="ex-lbl">BPG</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--red)">ACC</div><div class="ex-lbl">Champion</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--red)">3</div><div class="ex-lbl">Seasons</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-note">Dawn Staley mentee. Two programs, one standard.</div>
+    </div>
+
+    <!-- 03 WNBA ROOKIE -->
+    <div class="panel" data-era="sun" onclick="togglePanel(this)">
+      <div class="panel-header">
+        <span class="panel-era" style="color:var(--orange)">
+          <span class="live-dot" style="background:var(--orange)"></span>03 · WNBA Rookie
+        </span>
+        <span class="panel-years">2024</span>
+        <span class="panel-chevron">▾</span>
+      </div>
+      <div class="panel-title">Connecticut Sun</div>
+      <div class="panel-org">WNBA · Uncasville, CT</div>
+      <div class="hero-val" style="color:var(--orange)">38</div>
+      <div class="hero-lbl">Blocks · Led All WNBA Guards</div>
+      <div class="panel-rule"></div>
+      <div class="support-stats">
+        <div class="s-stat"><div class="s-val">8.8</div><div class="s-lbl">PPG</div></div>
+        <div class="s-stat"><div class="s-val">1.5</div><div class="s-lbl">SPG</div></div>
+        <div class="s-stat"><div class="s-val">4.6</div><div class="s-lbl">RPG</div></div>
+        <div class="s-stat"><div class="s-val">2.7</div><div class="s-lbl">APG</div></div>
+      </div>
+      <div class="panel-expand">
+        <div class="expand-inner">
+          <div class="expand-story">Only the 2nd Sun player ever after Tamika Catchings in 2002 with 370+ pts, 115+ reb, 110+ ast, 60+ stl in a rookie season.</div>
+          <div class="expand-stats">
+            <div class="ex-stat"><div class="ex-val" style="color:var(--orange)">0.9</div><div class="ex-lbl">BPG</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--orange)">370+</div><div class="ex-lbl">Pts</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--orange)">60+</div><div class="ex-lbl">Steals</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--orange)">#1</div><div class="ex-lbl">Guard Blks</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-note">370+ pts · 115+ reb · 110+ ast · 60+ stl. Only the 2nd Sun player ever.</div>
+    </div>
+
+    <!-- 04 UNRIVALED -->
+    <div class="panel" data-era="unrivaled" onclick="togglePanel(this)">
+      <div class="panel-header">
+        <span class="panel-era" style="color:var(--purple)">
+          <span class="live-dot" style="background:var(--purple)"></span>04 · Unrivaled
+        </span>
+        <span class="panel-years">2026</span>
+        <span class="panel-chevron">▾</span>
+      </div>
+      <div class="panel-title">Unrivaled: Vinyl</div>
+      <div class="panel-org">Unrivaled League</div>
+      <div class="hero-val" style="color:var(--purple)">5.2</div>
+      <div class="hero-lbl">PPG · 2026 Unrivaled Season</div>
+      <div class="panel-rule"></div>
+      <div class="support-stats">
+        <div class="s-stat"><div class="s-val" style="color:var(--purple)">2.4</div><div class="s-lbl">RPG</div></div>
+        <div class="s-stat"><div class="s-val" style="color:var(--purple)">1.1</div><div class="s-lbl">APG</div></div>
+        <div class="s-stat"><div class="s-val" style="color:var(--purple)">0.9</div><div class="s-lbl">SPG</div></div>
+        <div class="s-stat"><div class="s-val" style="color:var(--purple)">1.1</div><div class="s-lbl">BPG</div></div>
+      </div>
+      <div class="panel-expand">
+        <div class="expand-inner">
+          <div class="expand-story">Vinyl's defensive anchor. 6 blocks in a single game on Jan 9. The next chapter is being written right now.</div>
+          <div class="expand-stats">
+            <div class="ex-stat"><div class="ex-val" style="color:var(--purple)">8.6</div><div class="ex-lbl">MIN</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--purple)">6</div><div class="ex-lbl">Blks (Jan 9)</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--purple)">Vinyl</div><div class="ex-lbl">Team</div></div>
+            <div class="ex-stat"><div class="ex-val" style="color:var(--purple)">Year One</div><div class="ex-lbl">Season</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-note">The next chapter is being written in real time.</div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer">
+    <div class="f-left">Saniya Rivers · <strong>#22</strong> · Born March 4, 2003 · Turning 23</div>
+    <button id="btn-celebrate" onclick="celebrate()">🎊 Celebrate</button>
+    <div class="f-right">Wilmington · Columbia · Raleigh · Connecticut · Unrivaled</div>
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('c-canvas');
+const ctx    = canvas.getContext('2d');
+let   parts  = [], raf = null;
+
+function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+const COLS=['#FF6B1A','#FF9A5C','#8B3FD9','#C084FC','#C41A00','#222222','#888888','#D4A843'];
+
+function burst(){
+  if(raf) cancelAnimationFrame(raf);
+  parts=[];
+  for(let i=0;i<200;i++){
+    parts.push({
+      x:Math.random()*canvas.width, y:-14,
+      vx:(Math.random()-0.5)*9, vy:Math.random()*5+2,
+      g:0.18, s:Math.random()*8+3,
+      c:COLS[Math.floor(Math.random()*COLS.length)],
+      r:Math.random()*360, rs:(Math.random()-0.5)*7,
+      life:1, decay:0.007+Math.random()*0.005,
+      sq:Math.random()>0.45
+    });
+  }
+  tick();
+}
+
+function tick(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  parts=parts.filter(p=>p.life>0.01);
+  parts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=p.g;
+    p.vx*=0.997; p.r+=p.rs; p.life-=p.decay;
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,p.life);
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.r*Math.PI/180);
+    ctx.fillStyle=p.c;
+    if(p.sq) ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);
+    else{ ctx.beginPath(); ctx.arc(0,0,p.s/2.5,0,Math.PI*2); ctx.fill(); }
+    ctx.restore();
+  });
+  if(parts.length) raf=requestAnimationFrame(tick);
+  else ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function togglePanel(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.panel.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+function celebrateTag(el) {
+  burst();
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 600);
+}
+
+function celebrate(){ burst(); }
+window.addEventListener('load',()=>setTimeout(burst,900));
+</script>
+</body>
+</html>
